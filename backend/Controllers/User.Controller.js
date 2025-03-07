@@ -47,7 +47,7 @@ module.exports.loginUser = async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { userId: user._id, email: user.email },
       process.env.JWT_SECRET
     );
 
