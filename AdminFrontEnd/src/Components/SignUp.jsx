@@ -8,6 +8,7 @@ const SignUp = () => {
     email: "",
     password: "",
     phone: "",
+    name: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/signup",
+        "http://localhost:3000/admin/signup",
         formData
       );
       alert(response.data.message);
@@ -62,6 +63,21 @@ const SignUp = () => {
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="name" className="sr-only">
+                Name{" "}
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Username"
+                value={formData.name}
                 onChange={handleChange}
               />
             </div>
