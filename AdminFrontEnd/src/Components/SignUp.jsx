@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Toast from "react-hot-toast";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -19,15 +19,31 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !formData.email ||
+      !formData.password ||
+      !formData.phone ||
+      !formData.name
+    ) {
+      return Toast.error("All fields are required");
+    }
     try {
-      const response = await axios.post(
-        "http://localhost:3000/admin/signup",
-        formData
-      );
-      alert(response.data.message);
-      navigate("/login");
+      const response = await fetch("http://localhost:3000/admin/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        Toast.success(data.message);
+        navigate("/login");
+      } else {
+        setError(data.message);
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      Toast(err.response?.data?.message);
     }
   };
 
