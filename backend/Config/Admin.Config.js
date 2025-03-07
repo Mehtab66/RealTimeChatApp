@@ -1,7 +1,10 @@
 const Admin = require("../Models/Admin.Model");
 const bcrypt = require("bcryptjs");
+const connectDb = require("../Config/mongoDB.Config");
+connectDb();
 
 const Create_Admin = async () => {
+  console.log("Creating Admin");
   try {
     const name = "mehtab";
     const email = "mehtab@gmail.com";

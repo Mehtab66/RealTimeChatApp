@@ -3,38 +3,6 @@ const Admin = require("../Models/Admin.Model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-//SignUp Admin
-module.exports.signUpAdmin = async (req, res) => {
-  console.log("into admin signUp");
-  try {
-    const { email, password, phone, name } = req.body;
-    console.log(req.body);
-
-    // Check if user exists
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) {
-      console.log("Admin already exists");
-      return res.status(400).json({ message: "Admin already exists" });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const admin = new Admin({
-      email,
-      password: hashedPassword,
-      phone,
-      name,
-    });
-
-    await admin.save();
-    console.log("Admin created");
-    res.status(201).json({ message: "Admin created successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
 //LoginAdmin
 module.exports.loginAdmin = async (req, res) => {
   try {
