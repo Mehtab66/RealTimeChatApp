@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // Note: I corrected 'Toast' to 'toast'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,14 +20,33 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/login",
+        "http://localhost:3000/admin/login",
         formData
       );
-      localStorage.setItem("token", response.data.token);
-      alert(response.data.message);
-      navigate("/dashboard");
+      console.log("Response status:", response.status); // Will log 200 on success
+      console.log("Response data:", response.data);
+
+      // Check if token exists in response.data
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        toast.success(response.data.message); // Show success toast
+        navigate("/dashboard");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      // Handle error responses (e.g., 400, 500)
+      if (err.response) {
+        console.log("Error status:", err.response.status);
+        console.log("Error data:", err.response.data);
+
+        if (err.response.status === 400) {
+          toast.error("Invalid credentials");
+        } else {
+          toast.error(err.response.data.message || "An error occurred");
+        }
+      } else {
+        // Network error or other issues
+        toast.error("Network error: Please try again later");
+      }
     }
   };
 
@@ -40,7 +60,7 @@ const Login = () => {
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
             <a
-              href="/"
+              href="/signup" // Updated to match your signup route
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               create a new account

@@ -3,6 +3,7 @@ const Admin = require("../Models/Admin.Model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//SignUp Admin
 module.exports.signUpAdmin = async (req, res) => {
   console.log("into admin signUp");
   try {
@@ -34,6 +35,7 @@ module.exports.signUpAdmin = async (req, res) => {
   }
 };
 
+//LoginAdmin
 module.exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -48,7 +50,10 @@ module.exports.loginAdmin = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: admin._id, email: admin.email },
+      process.env.JWT_SECRET
+    );
     res.json({ token, message: "Login successful" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
